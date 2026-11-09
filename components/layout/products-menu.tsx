@@ -9,11 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "@/components/ui/external-link";
 import { ProductLogo } from "@/components/ui/product-logo";
 import { ezearch } from "@/content/products";
-import { getProject } from "@/content/work";
 import { duration, ease, fadeUpSmall, maskedLine, stagger } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-const ecore = getProject("e-core");
 const HOVER_CLOSE_DELAY = 120; // ms — lets the pointer cross the gap between trigger and panel
 
 /** Desktop "Products" dropdown: hover (mouse) or click/Enter; Escape, outside click and route change close it. */
@@ -132,20 +130,6 @@ export function ProductsMenu({ label, active }: { label: string; active: boolean
                   </ExternalLink>
                 </div>
               </motion.li>
-              {ecore && (
-                <motion.li variants={fadeUpSmall}>
-                  <Link
-                    href={`/work/${ecore.slug}`}
-                    className="hover:bg-surface-2 block rounded-xl p-4 transition-colors"
-                  >
-                    <span className="flex items-baseline justify-between gap-3">
-                      <span className="font-display text-lg font-medium">{ecore.title}</span>
-                      <span className="micro-label">{ecore.category}</span>
-                    </span>
-                    <span className="text-fg-muted mt-1 block text-sm">{ecore.summary}</span>
-                  </Link>
-                </motion.li>
-              )}
             </motion.ul>
           </motion.div>
         )}
@@ -200,15 +184,6 @@ export function MobileProductsGroup({
                 <Badge>{ezearch.badge}</Badge>
               </motion.div>
             </li>
-            {ecore && (
-              <li className="overflow-hidden">
-                <motion.div variants={maskedLine}>
-                  <Link href={`/work/${ecore.slug}`} onClick={onNavigate} className={item}>
-                    {ecore.title}
-                  </Link>
-                </motion.div>
-              </li>
-            )}
             <li className="overflow-hidden">
               <motion.div variants={maskedLine}>
                 <ExternalLink href={ezearch.url} className="text-fg-muted block text-lg">
