@@ -49,7 +49,7 @@ Everything below is plain TypeScript data. Save the file and the dev server upda
 | --------------------- | ---------------------------------------------------------------------------------------------- |
 | `content/site.ts`     | Company name, tagline, email, phone, address, opening hours, socials, nav links, tech marquee |
 | `content/services.ts` | Services: card summary, detail-page intro, offerings, tools. Each becomes `/services/<slug>`  |
-| `content/work.ts`     | Projects and case studies. Each becomes `/work/<slug>`                                         |
+| `content/work.ts`     | Portfolio projects and case studies. Each becomes `/work/<slug>`; filters come from `category` |
 | `content/products.ts` | Our own products (eZearch): links, problems, stats, features, steps. Page at `/products/ezearch` |
 | `content/company.ts`  | Industries, process steps, stats, testimonials, About page story and values                    |
 
@@ -62,31 +62,35 @@ Search the codebase for `TODO: confirm` to find every placeholder that still nee
 
 ### Add a case study
 
-1. Put the images in `public/work/<slug>/`, e.g. `public/work/acme/cover.jpg`. A 16:10 cover works best; `next/image` handles resizing and AVIF/WebP.
-2. Add an entry to `projects` in `content/work.ts`:
+A project is one object in `content/work.ts`; no component changes are needed.
+
+1. Put screenshots in `public/work/<slug>/` using the standard names: `cover.webp` (desktop home, 1440×900), `gallery-1.webp`/`gallery-2.webp` (desktop category/product), `gallery-3`–`gallery-5.webp` (mobile 390×844 home/category/product) and `og.jpg` (1200×630 link preview). Then `images: screenshots("<slug>", "<Name>")` wires them all up. Otherwise pass `images: { gallery: [] }` and the card shows placeholder art.
+2. Add an entry to `data` in `content/work.ts`:
 
    ```ts
    {
-     slug: "acme",                       // URL: /work/acme
-     title: "Acme Portal",
-     category: "Web app",
-     summary: "One line shown on cards and as the page intro.",
-     tags: ["Dashboard", "Payments"],
-     cover: { src: "/work/acme/cover.jpg", alt: "Acme Portal dashboard on a laptop" },
-     services: ["web-development", "ui-ux-design"], // slugs from content/services.ts
-     platform: "Web",
-     year: 2025,                         // or null to hide
-     client: "Acme Ltd",                 // or null to hide
-     links: [{ label: "Visit site", href: "https://acme.example" }],
-     sections: [
-       { title: "The challenge", body: "…" },
-       { title: "What we built", body: "…" },
-       { title: "The result", body: "…" },
-     ],
+     slug: "acme",                        // URL: /work/acme
+     name: "Acme",
+     url: "https://acme.example",         // live site (optional)
+     client: "Acme Ltd",                  // optional — hidden if missing
+     country: "Netherlands",              // optional
+     year: 2025,                          // optional
+     category: "E-commerce",              // must be in the Category type (adds a filter chip automatically)
+     type: "Client project",              // or "Our product" (always listed first, gets a badge)
+     tagline: "One line for cards, the page intro and the meta description.",
+     summary: "Overview paragraph.",
+     challenge: "…",                      // "" hides the section
+     solution: "…",                       // "" hides the section
+     features: ["…", "…"],
+     stack: ["Next.js", "TypeScript"],
+     results: ["…"],                      // optional — real, confirmed outcomes only
+     images: screenshots("acme", "Acme"),
+     featured: true,                      // also shown in the home page gallery
+     order: 40,                           // lower = earlier among client projects
    },
    ```
 
-3. Done. The page, the work listing, the home page's horizontal gallery and `sitemap.xml` all pick it up. Projects without a `cover` show branded placeholder art.
+3. Done. The `/work` grid and filters, the case study page (with "next project" link), the home gallery (if `featured`), `sitemap.xml` and the Open Graph image all pick it up.
 
 ### Add a service
 

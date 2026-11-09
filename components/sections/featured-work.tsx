@@ -6,14 +6,14 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ProjectCard } from "@/components/ui/project-card";
-import { projects } from "@/content/work";
+import { featuredProjects } from "@/content/work";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 
-// Widths are also capped by viewport height (16:10 art + heading + caption ≈ 100dvh - 21rem)
-// so pinned cards never overflow the screen. The lead project (our own product) is larger.
-const CARD = "w-full shrink-0 lg:w-[min(60vw,56rem,(100dvh-21rem)*1.36)]";
-const LEAD_CARD = "w-full shrink-0 lg:w-[min(72vw,68rem,(100dvh-21rem)*1.6)]";
+// Pinned (horizontal) card widths, also capped by viewport height (16:10 art + heading +
+// caption ≈ 100dvh - 21rem) so cards never overflow the screen. The lead project is larger.
+const CARD = "shrink-0 w-[min(60vw,56rem,(100dvh-21rem)*1.36)]";
+const LEAD_CARD = "shrink-0 w-[min(72vw,68rem,(100dvh-21rem)*1.6)]";
 
 /**
  * Desktop: the section is made as tall as the track's overflow, the inner view pins,
@@ -57,19 +57,24 @@ export function FeaturedWork() {
         <motion.div
           ref={trackRef}
           style={pinned ? { x } : undefined}
-          className="container-site mt-12 flex flex-col gap-6 lg:mx-0 lg:w-max lg:max-w-none lg:flex-row"
+          // Row layout only while pinned: before hydration and with reduced motion it's a grid,
+          // so the track can never push the page wider than the viewport.
+          className={cn(
+            "container-site mt-12 gap-6",
+            pinned ? "mx-0 flex w-max max-w-none flex-row" : "grid gap-y-16 md:grid-cols-2",
+          )}
         >
-          {projects.map((project, i) => (
+          {featuredProjects.map((project, i) => (
             <ProjectCard
               key={project.slug}
               project={project}
-              className={i === 0 ? LEAD_CARD : CARD}
+              className={pinned ? (i === 0 ? LEAD_CARD : CARD) : undefined}
             />
           ))}
           <Link
             href="/contact"
             className={cn(
-              CARD,
+              pinned && CARD,
               "rounded-card border-line-strong hover:border-accent group grid aspect-[16/10] place-items-center border border-dashed transition-colors",
             )}
           >
