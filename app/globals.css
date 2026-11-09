@@ -1,26 +1,268 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
+/* Brand values sampled from /public/brand/brand-logo.png */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0a0a0b;
+  --surface-1: #111113;
+  --surface-2: #17171a;
+  --fg: #ededed;
+  --fg-muted: #a1a1a6;
+  --fg-dim: #5c5c63; /* decorative only — fails AA for text */
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.14);
+
+  --accent: #9bca3e; /* logo lime — 10.9:1 on --bg */
+  --accent-ink: #0a0a0b; /* text on accent fills */
+  --brand-navy: #0b3266; /* logo navy — paper sections only, fails on dark */
+  --brand-teal: #0e6e8c; /* logo circle highlight — glows only */
+
+  --paper: #f3f2ee;
+  --paper-fg: #0a0a0b;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-dim: var(--fg-dim);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-navy: var(--brand-navy);
+  --color-teal: var(--brand-teal);
+  --color-paper: var(--paper);
+  --color-paper-fg: var(--paper-fg);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--ff-display);
+  --font-serif: var(--ff-serif);
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-card: 1.25rem;
+  --radius-pill: 999px;
+
+  /* Fluid type scale: min @360px → max @1440px */
+  --text-hero: clamp(3.5rem, 1.6rem + 8.5vw, 8.75rem);
+  --text-hero--line-height: 0.92;
+  --text-display: clamp(2.5rem, 1.5rem + 4.5vw, 5.5rem);
+  --text-display--line-height: 1;
+  --text-title: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+  --text-title--line-height: 1.1;
+  --text-lead: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --text-lead--line-height: 1.5;
+
+  --spacing-section: clamp(5rem, 3rem + 9vw, 12.5rem);
+  --container-site: 90rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility container-site {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-site);
+  padding-inline: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+}
+
+@utility micro-label {
+  font-family: var(--font-geist-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+/* Fixed full-screen grain; SVG noise keeps it a single paint layer */
+@utility grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+@theme {
+  --animate-marquee: marquee 40s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+}
+
+@utility spotlight {
+  background: radial-gradient(
+    420px circle at var(--x, 50%) var(--y, 50%),
+    color-mix(in oklab, var(--accent) 12%, transparent),
+    transparent 60%
+  );
+}
+
+/* 1px ring lit near the cursor: gradient fill masked down to the border box only */
+@utility border-glow {
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    260px circle at var(--x, 50%) var(--y, 50%),
+    color-mix(in oklab, var(--accent) 70%, transparent),
+    transparent 70%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+html.has-cursor,
+html.has-cursor * {
+  cursor: none;
+}
+html.has-cursor :is(input, textarea, select) {
+  cursor: text;
+}
+
+[data-intro="seen"] [data-preloader] {
+  display: none;
+}
+
+/* Hero reveal: CSS-only so it runs before hydration. Waits for the preloader on first visit. */
+:root {
+  --intro-delay: 1.5s;
+}
+[data-intro="seen"] {
+  --intro-delay: 0.15s;
+}
+@keyframes rise {
+  from {
+    transform: translateY(110%);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+@keyframes scroll-cue {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(200%);
+  }
+}
+.hero-word {
+  display: inline-block;
+  animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--intro-delay) + var(--i, 0) * 70ms);
+}
+.hero-fade {
+  animation: fade-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--intro-delay) + var(--d, 0ms));
+}
+.scroll-cue {
+  animation: scroll-cue 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-word,
+  .scroll-cue {
+    animation: none;
+  }
+  .hero-fade {
+    animation-name: fade-in-opacity;
+  }
+}
+@keyframes fade-in-opacity {
+  from {
+    opacity: 0;
+  }
+}
+
+.hero-glow {
+  opacity: 0.7;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--accent) 22%, transparent),
+    color-mix(in oklab, var(--brand-teal) 22%, transparent) 50%,
+    transparent
+  );
+}
+.project-glow {
+  background:
+    radial-gradient(
+      60% 70% at 30% 20%,
+      color-mix(in oklab, var(--brand-teal) 55%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      50% 60% at 80% 90%,
+      color-mix(in oklab, var(--accent) 30%, transparent),
+      transparent
+    );
+}
+.cta-glow {
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--accent) 20%, transparent),
+    transparent
+  );
+}
+
+/* 404 */
+@keyframes bob {
+  50% {
+    transform: translateY(-8%);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.bob-digit {
+  display: inline-block;
+  animation: bob 2.8s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * -0.45s);
+}
+.spin-digit {
+  display: inline-block;
+  animation: spin 7s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bob-digit,
+  .spin-digit {
+    animation: none;
+  }
 }
