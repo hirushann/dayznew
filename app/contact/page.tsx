@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contact" },
   title: "Contact",
   description: `Start a project with ${site.name}. Email ${site.email} or send us a message.`,
 };

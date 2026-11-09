@@ -9,6 +9,17 @@ const sameAs = Object.values(site.socials).filter((url): url is string => url !=
 
 export const ORG_ID = `${site.url}/#organization`;
 
+/** BreadcrumbList for a detail page; Home is prepended automatically. */
+export const breadcrumbs = (trail: { name: string; path: string }[]) => ({
+  "@type": "BreadcrumbList",
+  itemListElement: [{ name: "Home", path: "" }, ...trail].map((crumb, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: crumb.name,
+    item: `${site.url}${crumb.path}`,
+  })),
+});
+
 export function JsonLdScript({ data }: { data: object }) {
   return (
     <script
@@ -25,6 +36,14 @@ export function JsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${site.url}/#website`,
+        url: site.url,
+        name: site.name,
+        inLanguage: "en",
+        publisher: { "@id": org },
+      },
       {
         "@type": "Organization",
         "@id": org,

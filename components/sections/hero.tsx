@@ -27,8 +27,9 @@ export function Hero() {
             className="hero-fade text-lead text-fg-muted md:col-span-6 lg:col-span-5"
             style={{ "--d": "500ms" } as CSSProperties}
           >
-            {site.tagline} Custom software, web and mobile apps, design and QA — built by our team
-            in Sri Lanka since {site.founded}.
+            {site.name} is a software development studio in {site.address.locality}, Sri Lanka,
+            founded in {site.founded}. We build custom software, websites, webshops and mobile apps,
+            with UI/UX design and QA.
           </p>
           <div
             className="hero-fade flex flex-wrap gap-3 md:col-span-6 md:justify-end lg:col-span-7"

@@ -5,6 +5,7 @@ import { ServicesGrid } from "@/components/sections/services-grid";
 import { PageHeader } from "@/components/ui/page-header";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services" },
   title: "Services",
   description:
     "Custom software, web and mobile app development, UI/UX design, QA and WordPress from DayZ Solutions in Sri Lanka.",

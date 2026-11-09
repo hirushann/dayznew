@@ -10,6 +10,7 @@ import { about } from "@/content/company";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about" },
   title: "About",
   description: `${site.name} is a software studio in Nittambuwa, Sri Lanka, building custom software, web and mobile apps since ${site.founded}.`,
 };

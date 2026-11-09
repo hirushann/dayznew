@@ -5,7 +5,7 @@ import { Magnetic } from "@/components/motion/magnetic";
 import { Reveal } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
 import { Cta } from "@/components/sections/cta";
-import { JsonLdScript, ORG_ID } from "@/components/seo/json-ld";
+import { JsonLdScript, ORG_ID, breadcrumbs } from "@/components/seo/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { buttonClass } from "@/components/ui/button";
 import { ExternalLink } from "@/components/ui/external-link";
@@ -16,12 +16,12 @@ import { ezearch as product } from "@/content/products";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/products/ezearch" },
   title: `${product.name} — WooCommerce search`,
   description: `${product.tagline} Live in 3 minutes, with a free plan. Built by ${site.name}.`,
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
+const softwareApplication = {
   "@type": "SoftwareApplication",
   name: product.name,
   url: product.url,
@@ -32,6 +32,11 @@ const jsonLd = {
   image: `${site.url}${product.logo.src}`,
   featureList: product.features.map((f) => f.title),
   publisher: { "@id": ORG_ID },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [softwareApplication, breadcrumbs([{ name: product.name, path: product.href }])],
 };
 
 const pad = (i: number) => String(i + 1).padStart(2, "0");

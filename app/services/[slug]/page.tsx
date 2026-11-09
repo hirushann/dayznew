@@ -6,8 +6,10 @@ import { Reveal } from "@/components/motion/reveal";
 import { SpotlightCard } from "@/components/motion/spotlight-card";
 import { Cta } from "@/components/sections/cta";
 import { Process } from "@/components/sections/process";
+import { JsonLdScript, ORG_ID, breadcrumbs } from "@/components/seo/json-ld";
 import { PageHeader } from "@/components/ui/page-header";
 import { getService, services } from "@/content/services";
+import { site } from "@/content/site";
 
 export function generateStaticParams() {
   return services.map((s) => ({ slug: s.slug }));
@@ -17,16 +19,42 @@ export async function generateMetadata({
   params,
 }: PageProps<"/services/[slug]">): Promise<Metadata> {
   const service = getService((await params).slug);
-  return service ? { title: service.title, description: service.summary } : {};
+  return service
+    ? {
+        title: service.title,
+        description: service.summary,
+        alternates: { canonical: `/services/${service.slug}` },
+      }
+    : {};
 }
 
 export default async function ServicePage({ params }: PageProps<"/services/[slug]">) {
   const service = getService((await params).slug);
   if (!service) notFound();
   const others = services.filter((s) => s.slug !== service.slug);
+  const path = `/services/${service.slug}`;
 
   return (
     <>
+      <JsonLdScript
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Service",
+              name: service.title,
+              serviceType: service.title,
+              description: service.intro,
+              url: `${site.url}${path}`,
+              provider: { "@id": ORG_ID },
+            },
+            breadcrumbs([
+              { name: "Services", path: "/services" },
+              { name: service.title, path },
+            ]),
+          ],
+        }}
+      />
       <PageHeader label="Service" title={service.title} intro={service.intro} />
 
       {service.offerings.length > 0 && (
