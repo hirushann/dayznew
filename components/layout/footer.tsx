@@ -15,6 +15,12 @@ const socials = [
   { label: "LinkedIn", href: site.socials.linkedin },
 ].filter((s): s is { label: string; href: string } => s.href !== null);
 
+const legal = [
+  { label: "Terms and Conditions", href: "/terms-and-conditions" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Refund Policy", href: "/refund-policy" },
+];
+
 export function Footer() {
   const { address } = site;
   return (
@@ -82,6 +88,15 @@ export function Footer() {
         <p>
           © <Year /> {site.name}. All rights reserved.
         </p>
+        <ul className="flex flex-wrap gap-6">
+          {legal.map((l) => (
+            <li key={l.href}>
+              <Link href={l.href} className="hover:text-fg transition-colors">
+                {l.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
         {socials.length > 0 && (
           <ul className="flex gap-6">
             {socials.map((s) => (
