@@ -10,6 +10,13 @@ export const site = {
   founded: 2019,
   email: "info@dayzsolutions.com",
   phone: null as string | null, // TODO: confirm — no phone number on the current site
+  // Headquarters is a postal address only ("geen bezoekadres" = no visitors).
+  headquarters: {
+    street: "Oenerweg 30",
+    postalCode: "8181 RJ",
+    locality: "Heerde",
+    country: "NL",
+  },
   address: {
     street: "No 66/5/1A Webadagalle",
     locality: "Nittambuwa",

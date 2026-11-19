@@ -22,7 +22,7 @@ const legal = [
 ];
 
 export function Footer() {
-  const { address } = site;
+  const { address, headquarters: hq } = site;
   return (
     <footer className="border-line relative overflow-hidden border-t">
       <div className="container-site grid gap-12 py-24 md:grid-cols-12">
@@ -34,11 +34,24 @@ export function Footer() {
           >
             {site.email}
           </a>
-          <address className="text-fg-muted mt-6 not-italic">
-            {address.street}, {address.locality}
-            <br />
-            {address.region} {address.postalCode}, Sri Lanka
-          </address>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2">
+            <div>
+              <p className="micro-label">Headquarters</p>
+              <address className="text-fg-muted mt-2 not-italic">
+                {hq.street} (geen bezoekadres)
+                <br />
+                {hq.postalCode} {hq.locality}, Netherlands
+              </address>
+            </div>
+            <div>
+              <p className="micro-label">Sri Lanka branch</p>
+              <address className="text-fg-muted mt-2 not-italic">
+                {address.street}, {address.locality}
+                <br />
+                {address.region} {address.postalCode}, Sri Lanka
+              </address>
+            </div>
+          </div>
         </div>
 
         <nav aria-label="Footer" className="md:col-span-2 md:col-start-7">
