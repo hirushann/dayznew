@@ -16,6 +16,7 @@ export const site = {
     postalCode: "8181 RJ",
     locality: "Heerde",
     country: "NL",
+    timezone: "Europe/Amsterdam",
   },
   address: {
     street: "No 66/5/1A Webadagalle",

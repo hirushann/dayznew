@@ -81,10 +81,19 @@ export function Footer() {
 
         <div className="md:col-span-2">
           <p className="micro-label">Local time</p>
-          <p className="text-fg mt-4">
-            <LocalTime />
-          </p>
-          <p className="text-fg-muted">Nittambuwa, LK</p>
+          <ul className="mt-4 space-y-2">
+            {[
+              { place: "Heerde, NL", zone: site.headquarters.timezone },
+              { place: "Nittambuwa, LK", zone: site.timezone },
+            ].map((c) => (
+              <li key={c.place}>
+                <p className="text-fg">
+                  <LocalTime timeZone={c.zone} />
+                </p>
+                <p className="text-fg-muted">{c.place}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
